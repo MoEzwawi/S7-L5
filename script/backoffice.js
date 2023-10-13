@@ -4,9 +4,15 @@ const apiKey = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTI4ZWVl
 const addressBarContent = new URLSearchParams(location.search)
 const carId = addressBarContent.get('carId')
 
+
 if (carId) {
 
-  fetch('https://striveschool-api.herokuapp.com/api/product/' + carId)
+  fetch('https://striveschool-api.herokuapp.com/api/product/' + carId, {
+    method: 'GET',
+    headers: {
+      "Authorization": apiKey
+    }
+  })
     .then((res) => {
       if (res.ok) {
         return res.json()
@@ -28,10 +34,26 @@ if (carId) {
       carImage.value = car.imageUrl
       carPrice.value = car.price
 
+
     })
     .catch((err) => {
       console.log('errore', err)
     })
+}
+
+let methodToUse = 'POST'
+if (carId) {
+  methodToUse = 'PUT'
+}
+
+let urlToUse = 'https://striveschool-api.herokuapp.com/api/product/'
+if (carId) {
+  urlToUse = 'https://striveschool-api.herokuapp.com/api/product/' + carId
+}
+
+let alertMsg = 'SUCCESSFULLY ADDED TO THE STORE'
+if (carId) {
+  alertMsg = 'SUCCESSFULLY MODIFIED'
 }
 
 
@@ -62,9 +84,8 @@ myForm.addEventListener('submit', function (e) {
     carPrice.value = ''
   }
 
-  let methodToUse = 'POST'
 
-  let urlToUse = 'https://striveschool-api.herokuapp.com/api/product/'
+
 
   fetch(urlToUse, {
     method: methodToUse,
@@ -76,7 +97,7 @@ myForm.addEventListener('submit', function (e) {
   })
     .then((res) => {
       if (res.ok) {
-        alert("SUCCESSFULLY ADDED TO THE STORE")
+        alert(alertMsg)
         restoreForm()
       } else {
         alert("ERROR: contact your developer and give him some cash so can fix this")
